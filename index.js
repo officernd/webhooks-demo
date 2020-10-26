@@ -17,6 +17,10 @@ function storeRawBody(req, res, buf, encoding) {
 app.use(bodyParser.json({ limit: '5mb', verify: storeRawBody }));
 
 function verifyWebhookSignature(rawBody, officerndSignature) {
+    if (!officerndSignature) {
+        throw new Error('No signature header is present. Request cannot be verified.');
+    }
+
     if (!OFFICERND_WEBHOOKS_SECRET) {
         throw new Error('OFFICERND_WEBHOOKS_SECRET is not set, the webhook event cannot be verified.');
     }
